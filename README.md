@@ -63,7 +63,11 @@ Use `FPSoundIBP.Algorithm` with `FPSoundIBP.Option` for interval bound propagati
 
 **Interpreting the result.**
 
-- `Safe`: robustness is proven. With `fp_sound = true` this holds for the network executed in precision `u_type` with any expression tree, provided that no overflow occurs (excluded with `over_safe`) and that subnormal numbers are supported (or, with `under_safe`, also in flush-to-zero / denormals-are-zero mode). With `fp_sound = false` it holds only for real arithmetic.
+- `Safe`: the network is proven robust on the whole input ball.
+  - With `fp_sound = true`, this holds for the deployed network: it is evaluated in precision `u_type`, with any expression tree. Two assumptions remain:
+    - **no overflow**: with `over_safe = true` this is checked by the verifier (a possible overflow gives `PossibleUnderOrOverflow` instead of `Safe`); without it, it is assumed;
+    - **subnormal numbers are supported**: with `under_safe = true` the result also holds in flush-to-zero / denormals-are-zero mode.
+  - With `fp_sound = false`, it holds only in exact (real) arithmetic.
 - `Adversarial`: robustness could not be proven (or the unperturbed input is already misclassified). Since the bounds over-approximate, this does not mean that an adversarial example exists.
 - `PossibleUnderOrOverflow`: an overflow may occur in some neuron; no robustness claim is made.
 
